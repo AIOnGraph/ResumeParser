@@ -1,0 +1,4 @@
+.streamlit/secrets.toml
+__pycache__
+ankit_resume.docx_0.pdf
+venv/
