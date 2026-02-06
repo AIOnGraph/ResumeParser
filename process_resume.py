@@ -27,17 +27,10 @@ class ResumeDetails(BaseModel):
 
 class LangchainResponse:
 
-    def __init__(self):
-
-#         self.model= ChatGroq(
-#     model="llama3-70b-8192",
-#     temperature=0,
-#     max_tokens=None,
-#     timeout=None,
-#     max_retries=2,
-#     api_key=st.secrets["GROK_KEY"]
-# )
-        self.model=ChatOpenAI(openai_api_key=st.secrets["OPEN_AI_KEY"])
+    def __init__(self, openai_api_key: str):
+        if not openai_api_key:
+            raise ValueError("OpenAI API key must be provided via the UI")
+        self.model = ChatOpenAI(openai_api_key=openai_api_key)
         self.parserforsampleinvoice = JsonOutputParser(pydantic_object=ResumeDetails)
         
 
@@ -78,9 +71,9 @@ def extract_data_from_resume(pdf_file_path):
             resume_text += page_content
     return resume_text
 
-def process_resume_file(path):
-    resume_extracted_data=extract_data_from_resume(path)
-    response=LangchainResponse().genereate_response_for_sample_invoices(resume_extracted_data)
+def process_resume_file(path, openai_api_key: str):
+    resume_extracted_data = extract_data_from_resume(path)
+    response = LangchainResponse(openai_api_key).genereate_response_for_sample_invoices(resume_extracted_data)
     print(response)
     return response
 
